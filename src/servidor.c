@@ -19,6 +19,7 @@
 #include <arpa/inet.h>
 
 #include "protocolo.h"
+#include "sql.h"
 #include "util.h"
 
 /* Envia el buffer completo repitiendo send hasta terminar */
@@ -98,7 +99,7 @@ static void atender_cliente(int fd_c, const char *ip_cliente, int num_cliente)
             break;
         }
 
-        snprintf(respuesta, TAM_RESPUESTA, "Comando recibido: %s\n", peticion);
+        sql_procesar(peticion, respuesta, TAM_RESPUESTA);
 
         if (enviar_respuesta(fd_c, respuesta) != 0) {
             printf("[cliente %d - %s] error al enviar la respuesta\n", num_cliente, ip_cliente);
