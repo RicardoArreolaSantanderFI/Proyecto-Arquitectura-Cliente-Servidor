@@ -1,3 +1,7 @@
 *.pdf
 *.docx
 *.zip
+bin/
+*.o
+*.md
+!README.md
