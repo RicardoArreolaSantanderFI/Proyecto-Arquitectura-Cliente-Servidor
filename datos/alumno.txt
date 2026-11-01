@@ -1,0 +1,11 @@
+Id,Nombre,Apellido,Semestre,Carrera
+1,Juan,Perez,5,Computacion
+2,Anita,Lopez,8,Electronica
+3,Miguel,Gutierrez,7,Computacion
+4,Laura,Ramirez,3,Mecatronica
+5,Carlos,Hernandez,6,Telecom
+6,Maria,Torres,9,Computacion
+7,Pedro,Flores,2,Civil
+8,Sofia,Martinez,4,Electronica
+9,Diego,Castillo,1,Industrial
+10,Elena,Morales,5,Telecom
