@@ -67,7 +67,7 @@ int main(int argc, char *argv[])
     int sd;
     int puerto = PUERTO_DEFAULT;
     char linea[TAM_PETICION];
-    char peticion[TAM_PETICION];
+    char peticion[TAM_PETICION + 1];   /* comando mas el salto de linea */
     int es_salir;
 
     if (argc < 2) {
