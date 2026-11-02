@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Sistema Manejador de Bases de Datos</title>
+<style>
+  @page { size: Letter; margin: 2.2cm 2.3cm; }
+  body { font-family: Arial, Helvetica, sans-serif; font-size: 11.5pt; line-height: 1.45; color: #000; }
+  p { text-align: justify; margin: 0 0 10px 0; }
+  h1 { font-size: 22pt; font-weight: normal; margin: 0 0 14px 0; page-break-after: avoid; }
+  h2 { font-size: 12.5pt; font-weight: bold; margin: 18px 0 8px 0; page-break-after: avoid; }
+  h3 { font-size: 11.5pt; font-weight: bold; margin: 14px 0 6px 0; page-break-after: avoid; }
+  ul, ol { margin: 0 0 10px 0; }
+  li { margin-bottom: 4px; text-align: justify; }
+  .salto { page-break-before: always; }
+  .codigo { font-family: Consolas, "Courier New", monospace; font-size: 8.6pt; line-height: 1.3;
+            background: #f4f4f4; border: 1px solid #d0d0d0; padding: 8px 10px; margin: 6px 0 12px 0;
+            white-space: pre-wrap; word-wrap: break-word; }
+  .codigo .num { color: #888; }
+  .archivo { font-family: Consolas, "Courier New", monospace; font-weight: bold; }
+  .figura { text-align: center; margin: 10px 0 16px 0; page-break-inside: avoid; }
+  .figura img { max-width: 100%; border: 1px solid #ccc; }
+  .figura .pie { font-size: 10pt; margin-top: 4px; }
+  .mitad img { max-width: 75%; }
+  table.indice { border-collapse: collapse; width: 100%; font-size: 11.5pt; }
+  table.indice td { padding: 2px 0; }
+  table.indice td.n { text-align: right; width: 40px; }
+  table.indice td.sub { padding-left: 32px; }
+  table.datos { border-collapse: collapse; margin: 6px 0 12px 0; }
+  table.datos th, table.datos td { border: 1px solid #999; padding: 4px 8px; font-size: 10.5pt; }
+  table.datos th { background: #e8e8e8; }
+  code { font-family: Consolas, "Courier New", monospace; font-size: 10pt; }
+
+  /* Caratula */
+  .caratula { text-align: center; }
+  .caratula .encabezado { display: table; width: 100%; margin-top: 30px; }
+  .caratula .encabezado > div { display: table-cell; vertical-align: middle; }
+  .caratula .encabezado img { width: 130px; }
+  .caratula .titulo-u { font-size: 20pt; font-weight: bold; line-height: 1.3; }
+  .caratula .materia { font-size: 15pt; font-weight: bold; margin-top: 60px; }
+  .caratula .titulo { font-size: 20pt; font-weight: bold; text-decoration: underline; margin: 24px 60px 0 60px; line-height: 1.3; }
+  .caratula .datos { margin-top: 50px; font-size: 12.5pt; line-height: 2.1; }
+  .caratula .alumno { text-align: left; margin: 70px 0 0 40px; font-size: 12.5pt; line-height: 2.1; }
+</style>
+</head>
+<body>
+
+<!-- ===================== CARATULA ===================== -->
+<div class="caratula">
+  <div class="encabezado">
+    <div><img src="img/escudo_unam.png" alt="UNAM"></div>
+    <div>
+      <div class="titulo-u">Universidad Nacional Autónoma<br>de México</div>
+      <div class="titulo-u" style="margin-top:14px">Facultad de Ingeniería,</div>
+      <div class="titulo-u">Ingeniería en Computación.</div>
+    </div>
+    <div><img src="img/escudo_fi.png" alt="Facultad de Ingeniería"></div>
+  </div>
+
+  <div class="materia">Arquitectura Cliente-Servidor.</div>
+  <div class="titulo">Examen Extraordinario. SISTEMA MANEJADOR DE BASES DE DATOS.</div>
+
+  <div class="datos">
+    PROFESOR: MTRO. CARLOS ALBERTO ROMÁN ZAMITIZ<br>
+    Semestre: 2027-1<br>
+    Fecha de entrega: 2/Noviembre/2026
+  </div>
+
+  <div class="alumno">
+    Alumno: Arreola Santander Ricardo
+  </div>
+</div>
+
+<!-- ===================== INDICE ===================== -->
+<div class="salto">
+<h1>ÍNDICE</h1>
+<table class="indice">
+  <tr><td>INTRODUCCIÓN</td><td class="n">{{PAG:introduccion}}</td></tr>
+  <tr><td class="sub">Arquitectura cliente-servidor</td><td class="n">{{PAG:arquitectura}}</td></tr>
+  <tr><td class="sub">Sockets TCP/IP</td><td class="n">{{PAG:sockets}}</td></tr>
+  <tr><td class="sub">Sistema manejador de bases de datos</td><td class="n">{{PAG:dbms}}</td></tr>
+  <tr><td class="sub">Lenguaje SQL</td><td class="n">{{PAG:sql}}</td></tr>
+  <tr><td>OBJETIVOS</td><td class="n">{{PAG:objetivos}}</td></tr>
+  <tr><td>DESARROLLO</td><td class="n">{{PAG:desarrollo}}</td></tr>
+  <tr><td class="sub">Estructura del proyecto</td><td class="n">{{PAG:estructura}}</td></tr>
+  <tr><td class="sub">Constantes compartidas</td><td class="n">{{PAG:protocolo}}</td></tr>
+  <tr><td class="sub">Funciones de apoyo</td><td class="n">{{PAG:util}}</td></tr>
+  <tr><td class="sub">Servidor</td><td class="n">{{PAG:servidor}}</td></tr>
+  <tr><td class="sub">Cliente</td><td class="n">{{PAG:cliente}}</td></tr>
+  <tr><td class="sub">Manejo de la tabla</td><td class="n">{{PAG:tabla}}</td></tr>
+  <tr><td class="sub">Intérprete de comandos SQL</td><td class="n">{{PAG:interprete}}</td></tr>
+  <tr><td class="sub">Makefile</td><td class="n">{{PAG:makefile}}</td></tr>
+  <tr><td>RESULTADOS</td><td class="n">{{PAG:resultados}}</td></tr>
+  <tr><td>CONCLUSIONES</td><td class="n">{{PAG:conclusiones}}</td></tr>
+  <tr><td>BIBLIOGRAFÍA Y FUENTES</td><td class="n">{{PAG:bibliografia}}</td></tr>
+</table>
+</div>
+
+<!-- ===================== INTRODUCCION ===================== -->
+<div class="salto">
+<h1>INTRODUCCIÓN</h1>
+
+<p>Un <b>sistema manejador de bases de datos</b> (DBMS por sus siglas en inglés) es un programa que se encarga de guardar, consultar y modificar información de forma organizada. El usuario no trabaja directamente con los archivos en disco, sino que le envía instrucciones al manejador y éste se encarga de leer o escribir los datos y de regresar el resultado.</p>
+
+<p>En este proyecto se construye un manejador sencillo en el que la base de datos tiene una sola tabla, guardada en un archivo de texto, y en el que el manejador se divide en dos programas que corren en computadoras distintas: un servidor, que tiene el archivo y ejecuta las instrucciones, y un cliente, que se conecta al servidor a través de la red para enviarle las instrucciones y mostrar las respuestas.</p>
+
+<h2>Arquitectura cliente-servidor</h2>
+
+<p>La <b>arquitectura cliente-servidor</b> es una forma de organizar una aplicación en dos partes que se comunican por medio de una red:</p>
+
+<ol>
+  <li><b>Servidor:</b> Es el programa que ofrece un servicio. Permanece en ejecución esperando a que lleguen peticiones, las atiende y regresa una respuesta. En este proyecto el servidor es quien tiene el archivo de la tabla y quien ejecuta los comandos.</li>
+  <li><b>Cliente:</b> Es el programa que utiliza el servicio. Se conecta al servidor, le envía peticiones y muestra al usuario las respuestas que recibe. En este proyecto el cliente es la terminal en la que el usuario escribe los comandos SQL.</li>
+</ol>
+
+<p>Con esta organización varios clientes pueden usar el mismo servicio al mismo tiempo desde diferentes máquinas, y los datos se mantienen en un solo lugar. Para que el servidor pueda atender a varios clientes a la vez, en este proyecto se crea un proceso hijo por cada cliente que se conecta, de modo que cada conversación se lleva por separado.</p>
+
+<h2>Sockets TCP/IP</h2>
+
+<p>Un <b>socket</b> es el mecanismo que ofrece el sistema operativo para que dos programas se comuniquen a través de la red. Para el programa, un socket se maneja como un descriptor de archivo: se le escriben bytes con <code>send</code> y se le leen bytes con <code>recv</code>.</p>
+
+<p>Los sockets de este proyecto son de la familia <b>AF_INET</b>, es decir, utilizan direcciones IP versión 4, y son de tipo <b>SOCK_STREAM</b>, es decir, utilizan el protocolo <b>TCP</b>. TCP es un protocolo orientado a conexión: antes de intercambiar datos, cliente y servidor establecen una conexión, y durante ella TCP garantiza que los bytes lleguen completos y en orden. A cambio, TCP no conserva los límites de cada mensaje; lo que se envía con varias llamadas a <code>send</code> puede llegar en una sola llamada a <code>recv</code> o repartido en varias. Por eso la aplicación necesita definir cómo se separa un mensaje del siguiente.</p>
+
+<p>Las funciones que se utilizan en cada lado son las siguientes:</p>
+
+<table class="datos">
+  <tr><th>Servidor</th><th>Cliente</th></tr>
+  <tr><td><code>socket</code> crea el socket</td><td><code>socket</code> crea el socket</td></tr>
+  <tr><td><code>bind</code> lo asocia a una dirección y un puerto</td><td><code>gethostbyname</code> obtiene la dirección del servidor</td></tr>
+  <tr><td><code>listen</code> lo pone a esperar conexiones</td><td><code>connect</code> se conecta al servidor</td></tr>
+  <tr><td><code>accept</code> acepta a un cliente y regresa un nuevo socket</td><td><code>send</code> y <code>recv</code> intercambian datos</td></tr>
+  <tr><td><code>send</code> y <code>recv</code> intercambian datos</td><td><code>close</code> cierra la conexión</td></tr>
+  <tr><td><code>close</code> cierra la conexión</td><td></td></tr>
+</table>
+
+<p>Un detalle importante es el orden de los bytes. Los números de puerto se guardan en la estructura de dirección en <b>orden de red</b>, que es el byte más significativo primero. La función <code>htons</code> convierte un número del orden de la máquina al orden de red, y <code>ntohs</code> hace la conversión inversa.</p>
+
+<h2>Sistema manejador de bases de datos</h2>
+
+<p>Un manejador de bases de datos organiza la información en <b>tablas</b>. Una tabla está formada por <b>columnas</b>, que son los campos que tiene cada dato, y por <b>registros</b>, que son los renglones con los valores. En este proyecto la tabla es <b>Alumno</b> y tiene las columnas Id, Nombre, Apellido, Semestre y Carrera.</p>
+
+<p>Para simplificar, la tabla se representa con un archivo de texto llamado <code>alumno.txt</code>. La primera línea del archivo es la cabecera con los nombres de las columnas y cada línea siguiente es un registro. Los campos se separan con una coma:</p>
+
+<pre class="codigo">Id,Nombre,Apellido,Semestre,Carrera
+1,Juan,Perez,5,Computacion
+2,Anita,Lopez,8,Electronica</pre>
+
+<p>La columna <b>Id</b> es la <b>llave primaria</b>: identifica a cada registro de forma única, no se repite y no puede modificarse. Además es <b>autoincremental</b>, lo que quiere decir que el manejador la asigna de forma automática al insertar un registro, tomando el Id más grande que existe y sumándole uno.</p>
+
+<h2>Lenguaje SQL</h2>
+
+<p><b>SQL</b> es el lenguaje con el que se le dan instrucciones a un manejador de bases de datos. El proyecto implementa los cuatro comandos básicos para consultar y modificar una tabla, más un comando propio para cerrar la conexión:</p>
+
+<table class="datos">
+  <tr><th>Comando</th><th>Ejemplo</th><th>Qué hace</th></tr>
+  <tr><td>SELECT</td><td><code>SELECT * FROM Alumno</code></td><td>Regresa todos los registros de la tabla</td></tr>
+  <tr><td>INSERT</td><td><code>INSERT INTO Alumno VALUES (Jose,Sanchez,9,Telecom)</code></td><td>Agrega un registro nuevo</td></tr>
+  <tr><td>UPDATE</td><td><code>UPDATE Alumno SET Apellido=Gomez WHERE Id=2</code></td><td>Modifica los registros que cumplen la condición</td></tr>
+  <tr><td>DELETE</td><td><code>DELETE FROM Alumno WHERE Id=2</code></td><td>Elimina los registros que cumplen la condición</td></tr>
+  <tr><td>SALIR</td><td><code>SALIR</code></td><td>Cierra la conexión con el servidor</td></tr>
+</table>
+
+<p>Como lo permite el enunciado, el punto y coma al final del comando es opcional y los valores de texto no necesitan ir entre comillas.</p>
+</div>
+
+<!-- ===================== OBJETIVOS ===================== -->
+<div class="salto">
+<h1>OBJETIVOS</h1>
+
+<p>El alumno construirá un sistema manejador de bases de datos con arquitectura cliente-servidor, programado en lenguaje C sobre Linux, en el que el cliente se conecte de forma remota al servidor mediante sockets TCP/IP, le envíe comandos SQL y el servidor los ejecute sobre un archivo que simula una tabla.</p>
+
+<p>Objetivos particulares:</p>
+<ul>
+  <li>Programar un servidor que acepte conexiones remotas y atienda a varios clientes al mismo tiempo.</li>
+  <li>Programar un cliente que se conecte al servidor desde otro host, envíe comandos y muestre las respuestas.</li>
+  <li>Implementar los comandos SELECT, INSERT, UPDATE y DELETE sobre la tabla Alumno, respetando que la columna Id es la llave primaria y es autoincremental.</li>
+  <li>Implementar el comando SALIR para que el cliente se desconecte.</li>
+  <li>Probar el sistema con el cliente y el servidor en máquinas distintas.</li>
+</ul>
+</div>
+
+<!-- ===================== DESARROLLO ===================== -->
+<div class="salto">
+<h1>DESARROLLO</h1>
+
+<h2>Estructura del proyecto</h2>
+
+<p>El proyecto se organizó en varios archivos para separar la parte de red de la parte que maneja los datos. Cada archivo tiene una responsabilidad:</p>
+
+<table class="datos">
+  <tr><th>Archivo</th><th>Contenido</th></tr>
+  <tr><td><span class="archivo">src/protocolo.h</span></td><td>Constantes que comparten cliente y servidor</td></tr>
+  <tr><td><span class="archivo">src/util.h</span>, <span class="archivo">src/util.c</span></td><td>Funciones de apoyo para cadenas</td></tr>
+  <tr><td><span class="archivo">src/servidor.c</span></td><td>Servidor TCP, un proceso hijo por cliente</td></tr>
+  <tr><td><span class="archivo">src/cliente.c</span></td><td>Cliente TCP interactivo</td></tr>
+  <tr><td><span class="archivo">src/tabla.h</span>, <span class="archivo">src/tabla.c</span></td><td>Lectura y escritura de la tabla en el archivo</td></tr>
+  <tr><td><span class="archivo">src/sql.h</span>, <span class="archivo">src/sql.c</span></td><td>Intérprete de los comandos SQL</td></tr>
+  <tr><td><span class="archivo">datos/alumno.txt</span></td><td>La tabla Alumno</td></tr>
+  <tr><td><span class="archivo">Makefile</span></td><td>Compilación de los dos programas</td></tr>
+</table>
+
+<p>La comunicación entre cliente y servidor sigue dos reglas sencillas. El cliente envía un comando por línea, terminado con un salto de línea. El servidor responde con texto de cualquier longitud y marca el final de la respuesta con el carácter 0x04. De esta forma, aunque TCP entregue los datos en pedazos, cada lado sabe dónde termina lo que está leyendo.</p>
+
+<p>El desarrollo se llevó en un repositorio de git con una rama por cada parte: servidor, cliente, SELECT y los comandos INSERT, UPDATE y DELETE. Cada rama se integró a la rama principal cuando quedó terminada.</p>
+
+<h2>Constantes compartidas</h2>
+
+<p>El archivo <span class="archivo">protocolo.h</span> define los valores que ambos programas necesitan conocer: el puerto por omisión, el tamaño máximo de un comando y de una respuesta, el carácter que marca el fin de una respuesta y la palabra con la que se cierra la sesión.</p>
+
+{{CODIGO:src/protocolo.h}}
+
+<h2>Funciones de apoyo</h2>
+
+<p>En <span class="archivo">util.c</span> hay dos funciones que se usan en varias partes. <b>recortar_cadena</b> elimina los espacios y saltos de línea que hay al inicio y al final de una cadena; se usa para limpiar lo que escribe el usuario y cada campo que se lee del archivo. <b>quitar_comillas</b> elimina las comillas que encierran un valor, para que el usuario pueda escribir <code>Gomez</code> o <code>'Gomez'</code> indistintamente.</p>
+
+{{CODIGO:src/util.h}}
+
+{{CODIGO:src/util.c}}
+
+<h2>Servidor</h2>
+
+<p>El servidor se encuentra en <span class="archivo">servidor.c</span>. Recibe como argumento el puerto en el que va a escuchar; si no se indica, usa el 4898. Al inicio se incluyen las cabeceras de sockets y los archivos propios del proyecto.</p>
+
+{{CODIGO:src/servidor.c:1-23}}
+
+<p>Las dos primeras funciones se encargan de enviar datos. <b>enviar_todo</b> llama a <code>send</code> en un ciclo hasta que se hayan enviado todos los bytes, porque una sola llamada puede enviar menos de los que se le piden. <b>enviar_respuesta</b> envía el texto de la respuesta y después el carácter de fin, que es la señal para que el cliente deje de leer.</p>
+
+{{CODIGO:src/servidor.c:25-48}}
+
+<p><b>recibir_linea</b> lee el comando que envía el cliente. Se lee un byte a la vez hasta encontrar el salto de línea, para no tomar por error el inicio del siguiente comando. La función regresa el número de bytes leídos, cero si el cliente cerró la conexión y menos uno si hubo un error.</p>
+
+{{CODIGO:src/servidor.c:50-72}}
+
+<p><b>atender_cliente</b> es la conversación completa con un cliente y se ejecuta dentro del proceso hijo. En cada vuelta del ciclo se recibe un comando, se imprime en la terminal del servidor junto con la IP del cliente, y se revisa si es SALIR. Si lo es, se envía una despedida y termina el ciclo. Si no, el comando se pasa a <b>sql_procesar</b>, que arma la respuesta, y ésta se envía al cliente.</p>
+
+{{CODIGO:src/servidor.c:74-111}}
+
+<p>La función principal sigue la secuencia típica de un servidor TCP. Primero se crea el socket con <code>socket</code> y se activa la opción <code>SO_REUSEADDR</code> para poder reiniciar el servidor sin esperar a que el puerto se libere. Después se llena la estructura <code>sockaddr_in</code> con la familia AF_INET, la dirección <code>INADDR_ANY</code> para aceptar conexiones por cualquier interfaz y el puerto convertido a orden de red con <code>htons</code>. Con <code>bind</code> se asocia el socket a esa dirección y con <code>listen</code> se pone a escuchar.</p>
+
+<p>La llamada a <code>signal</code> con <code>SIGCHLD</code> hace que el sistema operativo recoja de manera automática a los procesos hijos cuando terminan, para que no queden procesos zombie.</p>
+
+<p>En el ciclo principal, <code>accept</code> se bloquea hasta que llega un cliente y regresa un nuevo descriptor para hablar con él. Se imprime la fecha, la hora y la IP del cliente, que se obtiene con <code>inet_ntoa</code>. Enseguida se llama a <code>fork</code>: el proceso hijo cierra el socket de escucha, atiende al cliente y termina; el proceso padre cierra el descriptor del cliente y regresa a <code>accept</code> para esperar al siguiente. Así, cada cliente tiene su propio proceso y varios pueden estar conectados al mismo tiempo.</p>
+
+{{CODIGO:src/servidor.c:113-191}}
+
+<h2>Cliente</h2>
+
+<p>El cliente se encuentra en <span class="archivo">cliente.c</span>. Recibe como argumentos la dirección IP o el nombre del servidor y, de forma opcional, el puerto.</p>
+
+{{CODIGO:src/cliente.c:1-20}}
+
+<p>La función <b>enviar_todo</b> es la misma que en el servidor. <b>recibir_respuesta</b> lee del socket en un ciclo e imprime en pantalla lo que va llegando. En cada bloque recibido busca el carácter de fin de respuesta; si lo encuentra, imprime lo que había antes de él y termina. Si <code>recv</code> regresa cero es que el servidor cerró la conexión.</p>
+
+{{CODIGO:src/cliente.c:22-61}}
+
+<p>En la función principal se crea el socket, se obtiene la dirección del servidor con <code>gethostbyname</code>, que acepta tanto una IP como un nombre, y se copia a la estructura <code>sockaddr_in</code> junto con el puerto en orden de red. Con <code>connect</code> se establece la conexión.</p>
+
+<p>Después viene el ciclo de la conversación. El cliente muestra el indicador <code>SQL&gt;</code>, lee una línea del teclado, le quita los espacios sobrantes y la envía al servidor con un salto de línea al final. Enseguida espera la respuesta completa y la muestra. Si el comando fue SALIR, después de recibir la despedida se cierra el socket y el programa termina. Las líneas vacías no se envían y la combinación Ctrl-D se trata como SALIR para no dejar la conexión abierta.</p>
+
+{{CODIGO:src/cliente.c:63-144}}
+
+<h2>Manejo de la tabla</h2>
+
+<p>El archivo <span class="archivo">tabla.h</span> define cómo se representa una tabla en memoria. Un <b>Registro</b> es un arreglo de campos de texto y una <b>Tabla</b> guarda el nombre, la ruta del archivo, los nombres de las columnas y un arreglo de registros. También se declaran las constantes con los límites del proyecto: hasta 8 columnas, 1000 registros y 64 caracteres por campo.</p>
+
+{{CODIGO:src/tabla.h}}
+
+<p>En <span class="archivo">tabla.c</span> está la lógica para pasar del archivo a la memoria y de regreso. La idea general es cargar la tabla completa en memoria, trabajar ahí y, si hubo cambios, reescribir el archivo entero. Como el servidor crea un proceso por cliente, dos procesos podrían escribir el archivo al mismo tiempo; para evitarlo, mientras una tabla está cargada su archivo se bloquea con <code>flock</code>: con bloqueo compartido si solo se va a leer y con bloqueo exclusivo si se va a modificar.</p>
+
+<p><b>tabla_dividir_campos</b> recorre una línea buscando comas y copia cada pedazo como un campo, quitándole los espacios. Se usa para la cabecera, para cada registro y también para la lista de valores del INSERT. <b>nombre_valido</b> revisa que el nombre de la tabla solo tenga letras, dígitos y guion bajo, de modo que no se pueda abrir un archivo fuera de la carpeta de datos.</p>
+
+{{CODIGO:src/tabla.c:1-52}}
+
+<p><b>tabla_cargar</b> forma la ruta del archivo con el nombre de la tabla en minúsculas, por ejemplo <code>Alumno</code> se convierte en <code>datos/alumno.txt</code>. Abre el archivo en modo lectura o en modo lectura y escritura según se pida, lo bloquea, reserva memoria para los registros y lee la primera línea como cabecera. Después lee cada línea siguiente como un registro, ignorando las líneas vacías. Si algo falla, deja un mensaje en el parámetro <code>error</code> y regresa menos uno.</p>
+
+{{CODIGO:src/tabla.c:54-117}}
+
+<p><b>tabla_guardar</b> vacía el archivo con <code>ftruncate</code> y vuelve a escribir la cabecera y todos los registros, separando los campos con coma. <b>tabla_liberar</b> quita el bloqueo, cierra el archivo y libera la memoria. <b>tabla_indice_columna</b> busca una columna por nombre sin distinguir mayúsculas y <b>tabla_siguiente_id</b> busca el Id más grande y le suma uno, que es el valor que recibe el siguiente registro insertado.</p>
+
+{{CODIGO:src/tabla.c:119-188}}
+
+<h2>Intérprete de comandos SQL</h2>
+
+<p>El archivo <span class="archivo">sql.c</span> contiene una función por cada comando y una función de entrada que decide a cuál llamar. Todas reciben el comando y el buffer donde se arma la respuesta. La función <b>agregar</b> escribe texto con formato al final de la respuesta cuidando no pasarse del tamaño del buffer.</p>
+
+{{CODIGO:src/sql.h}}
+
+{{CODIGO:src/sql.c:1-29}}
+
+<p>Las siguientes funciones son de apoyo para analizar los comandos. <b>buscar_palabra</b> localiza una palabra clave como VALUES, SET o WHERE sin distinguir mayúsculas y verificando que sea una palabra completa. <b>copiar_entre</b> copia el pedazo de comando que hay entre dos posiciones, por ejemplo lo que está entre SET y WHERE. <b>separar_asignacion</b> parte una expresión de la forma columna=valor en sus dos partes. <b>cumple_condicion</b> compara el campo de un registro con el valor de la condición WHERE.</p>
+
+{{CODIGO:src/sql.c:31-87}}
+
+<h3>Comando SELECT</h3>
+
+<p><b>sql_select</b> espera exactamente cuatro palabras: SELECT, un asterisco, FROM y el nombre de la tabla. Carga la tabla en modo lectura y copia a la respuesta la cabecera y después cada registro, con el mismo formato que tiene el archivo. Por eso el cliente muestra el listado tal como está en <code>alumno.txt</code>.</p>
+
+{{CODIGO:src/sql.c:89-120}}
+
+<h3>Comando INSERT</h3>
+
+<p><b>sql_insert</b> revisa que el comando empiece con INSERT INTO y el nombre de la tabla, localiza la palabra VALUES y toma el texto que hay entre el paréntesis que abre y el que cierra. Ese texto se separa por comas y a cada valor se le quitan las comillas si las tiene. Después se carga la tabla en modo escritura y se verifica que el número de valores sea igual al número de columnas menos uno, porque el Id no se envía. Se forma el registro nuevo con el Id que regresa <b>tabla_siguiente_id</b>, se agrega al final y se guarda el archivo. La respuesta indica el Id que recibió el registro.</p>
+
+{{CODIGO:src/sql.c:122-211}}
+
+<h3>Comando UPDATE</h3>
+
+<p><b>sql_update</b> localiza las palabras SET y WHERE; las dos son obligatorias, para no modificar toda la tabla por accidente. El texto entre SET y WHERE son las asignaciones, que pueden ser varias separadas por coma, y el texto después de WHERE es la condición. Se carga la tabla, se verifica que todas las columnas existan y se rechaza el comando si alguna asignación intenta cambiar la primera columna, que es el Id. Después se recorren los registros y a los que cumplen la condición se les copian los valores nuevos. Si ningún registro cumplió, se responde con un error y el archivo no se toca; si hubo cambios, se guarda y se responde cuántos registros se actualizaron.</p>
+
+{{CODIGO:src/sql.c:213-320}}
+
+<h3>Comando DELETE</h3>
+
+<p><b>sql_delete</b> funciona de forma parecida. Localiza WHERE, obtiene la condición y carga la tabla. Para eliminar registros se recorre el arreglo con dos índices: los registros que no cumplen la condición se van copiando hacia adelante y los que sí cumplen se dejan fuera. Al final el número de registros se reduce y se guarda el archivo. Los Id de los registros restantes no se vuelven a numerar, porque el Id es la llave primaria y debe mantenerse estable.</p>
+
+{{CODIGO:src/sql.c:322-394}}
+
+<h3>Función de entrada</h3>
+
+<p><b>sql_procesar</b> es la función que llama el servidor. Hace una copia del comando, le quita los espacios y el punto y coma final si lo hay, y lee la primera palabra. Según esa palabra llama a la función del comando correspondiente; si no es ninguna de las conocidas, responde que el comando no se reconoce.</p>
+
+{{CODIGO:src/sql.c:396-429}}
+
+<h2>Makefile</h2>
+
+<p>El <span class="archivo">Makefile</span> compila los dos programas con las advertencias activadas. <code>make</code> genera <code>bin/servidor</code> y <code>bin/cliente</code>, y <code>make clean</code> borra los binarios.</p>
+
+{{CODIGO:Makefile}}
+</div>
+
+<!-- ===================== RESULTADOS ===================== -->
+<div class="salto">
+<h1>RESULTADOS</h1>
+
+<p>Las pruebas se realizaron con dos máquinas virtuales de Ubuntu en VirtualBox, conectadas en modo de adaptador puente para que cada una tuviera su propia dirección IP en la red local. La máquina <b>servidor</b> recibió la dirección 192.168.100.102 y la máquina <b>cliente</b> la dirección 192.168.100.100.</p>
+
+<h2>Preparación de las máquinas</h2>
+
+<div class="figura mitad"><img src="img/02-red-adaptador-puente-cliente.png"><div class="pie">Configuración de red de la máquina virtual en modo adaptador puente.</div></div>
+
+<div class="figura"><img src="img/03-hostname-ip-servidor.png"><div class="pie">Nombre y dirección IP de la máquina servidor.</div></div>
+
+<div class="figura"><img src="img/04-hostname-ip-cliente.png"><div class="pie">Nombre y dirección IP de la máquina cliente.</div></div>
+
+<div class="figura mitad"><img src="img/05-ping-cliente-a-servidor.png"><div class="pie">Prueba de conectividad del cliente hacia el servidor con ping.</div></div>
+
+<div class="figura"><img src="img/06-make-vm-1.png"><div class="pie">Compilación del proyecto con make en una de las máquinas.</div></div>
+
+<div class="figura"><img src="img/07-make-y-tabla-limpia-vm-2.png"><div class="pie">Compilación en la otra máquina y restauración de la tabla original.</div></div>
+
+<h2>Conexión remota</h2>
+
+<div class="figura"><img src="img/08-servidor-escuchando.png"><div class="pie">El servidor se levanta en el puerto 4898 y queda en espera.</div></div>
+
+<div class="figura"><img src="img/09-cliente-conectado-remoto.png"><div class="pie">El cliente se conecta desde la otra máquina a la IP del servidor.</div></div>
+
+<div class="figura"><img src="img/10-servidor-cliente-conectado.png"><div class="pie">El servidor registra la fecha, la hora y la IP del cliente conectado.</div></div>
+
+<h2>Ejecución de los comandos</h2>
+
+<div class="figura"><img src="img/11-cliente-select.png"><div class="pie">SELECT * FROM Alumno muestra la cabecera y los diez registros de la tabla.</div></div>
+
+<div class="figura mitad"><img src="img/12-cliente-insert-y-select.png"><div class="pie">INSERT agrega el registro con Id 11 y el SELECT lo muestra al final.</div></div>
+
+<div class="figura mitad"><img src="img/13-cliente-update-y-select.png"><div class="pie">UPDATE cambia el apellido del registro con Id 2 y el SELECT lo confirma.</div></div>
+
+<div class="figura"><img src="img/14-cliente-update-id-rechazado.png"><div class="pie">El intento de modificar la columna Id se rechaza por ser la llave primaria.</div></div>
+
+<div class="figura mitad"><img src="img/15-cliente-delete-y-select.png"><div class="pie">DELETE elimina el registro con Id 2 y el SELECT ya no lo muestra.</div></div>
+
+<div class="figura mitad"><img src="img/16-cliente-salir.png"><div class="pie">SALIR recibe la despedida del servidor y el cliente termina.</div></div>
+
+<div class="figura"><img src="img/17-servidor-bitacora-completa.png"><div class="pie">Bitácora del servidor con todos los comandos recibidos del cliente y su desconexión.</div></div>
+
+<h2>Estado final del archivo</h2>
+
+<div class="figura"><img src="img/18-servidor-ls-datos.png"><div class="pie">El archivo alumno.txt fue modificado en la máquina servidor.</div></div>
+
+<div class="figura"><img src="img/19-servidor-cat-alumno.png"><div class="pie">Contenido final del archivo: sin el registro con Id 2 y con el registro insertado con Id 11.</div></div>
+</div>
+
+<!-- ===================== CONCLUSIONES ===================== -->
+<div class="salto">
+<h1>CONCLUSIONES</h1>
+
+<p><b>Arreola Santander Ricardo</b></p>
+
+<p>Para resolver el proyecto se construyeron dos programas en C que se comunican por sockets TCP: un servidor que guarda la tabla en un archivo de texto y ejecuta los comandos, y un cliente que se conecta desde otra máquina para enviarlos. Al hacerlo se vio en la práctica la secuencia de llamadas de un servidor, que crea el socket, lo asocia a un puerto, escucha y acepta conexiones, y la del cliente, que resuelve la dirección y se conecta.</p>
+
+<p>Un punto que resultó importante fue que TCP entrega un flujo de bytes y no mensajes separados, por lo que fue necesario acordar un formato: un comando por línea del lado del cliente y un carácter de fin de respuesta del lado del servidor. También se comprobó la utilidad de crear un proceso por cada cliente con fork, lo que permite atender varias conexiones a la vez, y la necesidad de bloquear el archivo para que dos procesos no lo escriban al mismo tiempo.</p>
+
+<p>Con las pruebas entre dos máquinas virtuales se verificó que los cuatro comandos SQL funcionan sobre el archivo, que la columna Id se asigna de forma automática y no puede modificarse, y que el comando SALIR cierra la conexión de forma ordenada. El proyecto permitió unir en una sola aplicación los temas de procesos, sockets y manejo de archivos en Linux.</p>
+</div>
+
+<!-- ===================== BIBLIOGRAFIA ===================== -->
+<div class="salto">
+<h1>BIBLIOGRAFÍA Y FUENTES</h1>
+
+<p>• Román Zamitiz, C. A. <i>Arquitectura Cliente-Servidor. Tema 3: Sockets Internet en lenguaje C</i>. Facultad de Ingeniería, UNAM. Accedido el 1 de noviembre de 2026 de http://profesores.fi-b.unam.mx/carlos/acs/Tema-03-Sockets-INTERNET-C/index.html</p>
+
+<p>• The Open Group. <i>The Open Group Base Specifications Issue 6, IEEE Std 1003.1</i>. Accedido el 1 de noviembre de 2026 de https://pubs.opengroup.org/onlinepubs/009696799/idx/index.html</p>
+
+<p>• Stevens, W. R., Rago, S. A. <i>Advanced Programming in the UNIX Environment</i>, 3a edición, editorial Addison-Wesley, 2013. Referencia para el manejo de procesos, archivos y sockets en sistemas UNIX.</p>
+
+<p>• Tanenbaum, A. S., Bos, H. <i>Sistemas Operativos Modernos</i>, 4a edición, editorial Pearson, 2016. Referencia para los conceptos de procesos y comunicación entre ellos.</p>
+
+<p>• Kernighan, B. W., Ritchie, D. M. <i>El lenguaje de programación C</i>, 2a edición, editorial Prentice Hall, 1991.</p>
+</div>
+
+</body>
+</html>
